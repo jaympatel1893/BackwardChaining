@@ -1,9 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package assignment.pkg3;
+
 /**
  *
  * @author jay
@@ -22,17 +17,17 @@ class Data{
 public class inference
 {
     
-    static HashSet <String> forLoopDetection ;//= new HashSet<String>();
+    static HashSet <String> forLoopDetection ;
     static int check ;
-    static ArrayList < ArrayList<String>> global;// = new ArrayList<>();
+    static ArrayList < ArrayList<String>> global;
     static String global_query;
     public static void main(String args[])throws IOException
     {
-        BufferedReader br = new BufferedReader(new FileReader("/Users/jay/NetBeansProjects/Assignment 3/src/assignment/pkg3/input_1.txt"));
-        //BufferedReader br = new BufferedReader(new FileReader(args[1]));
-        //PrintStream out = new PrintStream(new FileOutputStream("output.txt"));
+        BufferedReader br = new BufferedReader(new FileReader("input.txt"));
         
-        //System.setOut(out);
+        PrintStream out = new PrintStream(new FileOutputStream("output.txt"));
+        
+        System.setOut(out);
         
         int inputQuery = Integer.parseInt(br.readLine());
         
@@ -42,15 +37,12 @@ public class inference
         {
             String temp = br.readLine();
             queries.add(temp.toUpperCase());
-            //System.out.println(queries.get(i));
+            
         }
         LinkedHashMap <String, Data> KB = new LinkedHashMap<String, Data>();
         
         int number_Rules = Integer.parseInt(br.readLine());
-//        System.out.println("Hello");
-//        System.out.println(number_Rules);
-        //List<Term> terms = new ArrayList<Term>();
-        
+                
         HashSet <String> allPredicateNames = new HashSet<String>();
         
         for(int i=0;i<number_Rules;i++)
@@ -71,7 +63,7 @@ public class inference
                 if(sentence.charAt(t)==',')
                 {
                     indicesOfComma.add(t);
-                    //System.out.println(i);
+                    
                 }
             }
 
@@ -82,14 +74,12 @@ public class inference
 
                 if(sentence.charAt(start)>=65 && sentence.charAt(start)<=91)
                 {
-                    //Its is a constant
-                    //System.out.println("Aya");
-                    //whileloop till ) or ,
+                    
                     while(sentence.charAt(start)!=')' && sentence.charAt(start)!=',')
                     {
                         char temp = Character.toUpperCase(sentence.charAt(start));
                         sentence = sentence.substring(0,start) + temp + sentence.substring(start+1);
-                        //System.out.println("hmm "+sentence);
+                        
                         start++;
                     }
                 }
@@ -101,14 +91,11 @@ public class inference
 
                 if(sentence.charAt(start)>=65 && sentence.charAt(start)<=91)
                 {
-                    //Its is a constant
-                    //System.out.println("Aya");
-                    //whileloop till ) or ,
                     while(sentence.charAt(start)!=')' && sentence.charAt(start)!=',')
                     {
                         char temp = Character.toUpperCase(sentence.charAt(start));
                         sentence = sentence.substring(0,start) + temp + sentence.substring(start+1);
-                        //System.out.println("hmm "+sentence);
+                        
                         start++;
                     }
                 }
@@ -127,14 +114,14 @@ public class inference
                 for(int j=0;j<pre.length;j++)
                 {
                     String predNameOfPre = extractPredicateName(pre[j]);
-                    //System.out.println(predNameOfPre);
+                    
                     sentence = sentence.replace(predNameOfPre, predNameOfPre.toUpperCase());
                 }
                 
                 String predicateNameConclusion = extractPredicateName(sentence.split("=>")[1]);
-                //System.out.println("LODU"+sentence);
+                
                 sentence = sentence.replace(predicateNameConclusion, predicateNameConclusion.toUpperCase());
-                //System.out.println("Madarchod" +predicateNameConclusion +" " + sentence);
+                
                 predicateNameConclusion = predicateNameConclusion.toUpperCase();
                 
                 if(KB.containsKey(predicateNameConclusion))
@@ -155,17 +142,14 @@ public class inference
             }
             else
             {
-                //It is a fact
+                
                 sentence = sentence.toUpperCase();
                 String nameOfPredicate = extractPredicateName(sentence);
                 
-                //When it is a fact and string was already present inside the hashmap
+                
                 if(KB.containsKey(nameOfPredicate))
                 {
-                    //No need to add new key value
-                    //get the data value from the hashmap
                     
-                    //find the data which was already inside the hashmap
                     for (Map.Entry<String, Data> entry : KB.entrySet()) {
                         String string = entry.getKey();
                         if(string.compareTo(nameOfPredicate)==0)
@@ -177,7 +161,7 @@ public class inference
                 }
                 else
                 {
-                    //When you encounter this fact as totally new one
+                    
                     Data temp = new Data();
                     ArrayList <String> fact = new ArrayList<>();
                     
@@ -193,8 +177,7 @@ public class inference
                 
             
         } 
-        //printKB(KB);
-        //System.out.println("Start Queries");
+        
         for(String goal: queries)
         {
             forLoopDetection = new HashSet<>();
@@ -216,7 +199,7 @@ public class inference
                 continue;
             }
             
-            //System.out.println(goal+" answer "+ ans);
+            
             System.out.println((ans+"").toUpperCase());
         }
         
@@ -225,29 +208,15 @@ public class inference
     static boolean  FOL_BC_WITH_UNIFY(LinkedHashMap<String, Data> KB, String curr_goal, String current_Rule)
     {
         curr_goal = curr_goal.trim();
-        //System.out.println("Current goal is:"+curr_goal);
+        
 
         String curr_goal_predicate_name = extractPredicateName(curr_goal);
-//        if(forLoopDetection.contains(curr_goal) && check!=0)
-//        {
-//            System.out.println("Infi Loop");
-//            forLoopDetection = new HashSet<>();
-//            
-//            check = 0;
-//            
-//            forLoopDetection.add(global_query);
-//            //forLoopDetection.add("A(BOB)");
-//            return false;
-//        }
-//        if(check>0)
-//        {
-//            forLoopDetection.add(curr_goal);
-//        }
+
         check++;
 
         if(!KB.containsKey(curr_goal_predicate_name))
         {
-            //System.out.println("RHS me hai hi nahi hence False");
+            
             return false;
         }
         Data rhsFound = KB.get(curr_goal_predicate_name);
@@ -256,7 +225,7 @@ public class inference
         {
             if(facts.compareTo(curr_goal)==0)
             {
-                //System.out.println("Direct fact mila hence true"+curr_goal);
+                
                 forLoopDetection.remove(current_Rule);
                 return true;
             }
@@ -273,15 +242,10 @@ public class inference
 
             String splitRule[] = rule.split("=>");
             
-            
-
             //Get the rhs of the rule
             String conlusion = splitRule[1];
-            
-            
 
-            //String goal = "C(Bob,y)";
-
+            
             global = new ArrayList<>();
 
             int index1 = curr_goal.indexOf("(");
@@ -292,14 +256,13 @@ public class inference
             String argListGoal[] = temp.split(",");
             
             
-            //System.out.println("BC"+Arrays.toString(argListGoal));
+            
 
             boolean indexOfVariableConstants[] = new boolean[argListGoal.length];
-            //System.out.println(indexOfVariableConstants.length);
-            //false means not a constant
+            
             for(int i=0;i<indexOfVariableConstants.length;i++)
             {
-                //System.out.println(argListGoal[i].charAt(0));
+            
                 if(argListGoal[i].charAt(0)>=65 && argListGoal[i].charAt(0)<=91)
                 {
                     //It is a constant
@@ -307,20 +270,20 @@ public class inference
                 }   
             }
 
-            //conclusion ka arguments
+            
             
             
             index1 = conlusion.indexOf("(");
             index2 = conlusion.indexOf((")"));
             String temp2 = conlusion.substring(index1+1, index2);
-            //System.out.println(temp2);
+            
 
             String argListConclusion[] = temp2.split(",");
             boolean indexOfConstantsInRule[] = new boolean[argListConclusion.length];
             
             for(int i=0;i<indexOfConstantsInRule.length;i++)
             {
-                //System.out.println(argListGoal[i].charAt(0));
+            
                 if(argListConclusion[i].charAt(0)>=65 && argListConclusion[i].charAt(0)<=91)
                 {
                     //It is a constant
@@ -355,40 +318,10 @@ public class inference
                 }
             }
             
-//            for (Map.Entry<String, ArrayList<Integer>> entry : indicesOfVariables.entrySet()) {
-//                String string = entry.getKey();
-//                System.out.println(string);
-//                ArrayList<Integer> integer = entry.getValue();
-//                for(int i=0;i<integer.size();i++)
-//                {
-//                    System.out.print(integer.get(i)+" ");
-//                }
-//                
-//                System.out.println("");
-//            }
+
             String newConclusion = curr_goal;
             
             ArrayList<String> argsOfNewConclusion = extractArguments(newConclusion.trim());
-            
-//            for(String t : argsOfNewConclusion)
-//            {
-//                System.out.println(t);
-//            }
-//            for(String t: argListConclusion)
-//            {
-//                System.out.println(t);
-//            }
-//            for (Map.Entry<String, ArrayList<Integer>> entry : indicesOfVariables.entrySet()) {
-//                String string = entry.getKey();
-//                System.out.println("String"+string);
-//                ArrayList<Integer> arrayList = entry.getValue();
-//                for(int i=0;i<arrayList.size();i++)
-//                {
-//                    System.out.println(arrayList.get(i));
-//                }
-//                
-//            }
-            
             
             boolean tempBoolean = true;
             for(int z=0;z<indicesOfVariables.size();z++)
@@ -399,11 +332,10 @@ public class inference
                 if(individualVariable.size()>1)
                 {
                         
-                        //System.out.println("Yes");
                         int curr_ind = individualVariable.get(0);
-                        //System.out.println("curr index is"+curr_ind);
+                        
                         String curr_str = argsOfNewConclusion.get(curr_ind);
-                        //System.out.println("curr str"+curr_str);
+                        
                         
                         for(int z2 = 1;z2<individualVariable.size();z2++)
                         {
@@ -422,7 +354,7 @@ public class inference
             }
             if(!tempBoolean)
             {
-                //System.out.println("Locha e ulfat");
+                
                 return false;
             }
                 
@@ -431,7 +363,7 @@ public class inference
             	if(indexOfVariableConstants[i] && indexOfConstantsInRule[i]){
             		if(!(argListGoal[i].equals(argListConclusion[i]))){
             			ruleConstant=false;
-            			//System.out.println(rule + ArgumentListOfGoal[i] + argumentListOfConclusion[i] + goal);
+
             			break;
             		}
             	}
@@ -445,7 +377,7 @@ public class inference
 
             for(int i=0;i<indexOfVariableConstants.length;i++)
             {
-                //System.out.println(indexOfVariableConstants[i]);
+                
                 if(indexOfVariableConstants[i])
                 {
                     String toBeSubsituted = argListConclusion[i];
@@ -454,11 +386,7 @@ public class inference
                 }
 
             }
-            //System.out.println("Rule ye hai"+rule);
             
-            
-            
-
             //There is a possibility that this rule on LHS has still some variables
 
             //We have to substitute all possible values of variables
@@ -473,29 +401,16 @@ public class inference
             }
             catch(Exception e)
             {
-                
-//                for (Map.Entry<String, ArrayList<String>> entry : permu.entrySet()) {
-//                    String string = entry.getKey();
-//                    System.out.println(string);
-//                    ArrayList<String> arrayList = entry.getValue();
-//                    for(int i=0;i<arrayList.size();i++)
-//                    {
-//                        System.out.print(arrayList.get(i));
-//                    }
-//                    
-//                }
-//                System.out.println("No Subs");
-                
                 continue;
             }
-            //System.out.println("Permu size"+permu.size());
+            
             for (Map.Entry<String, ArrayList<String>> entry : permu.entrySet()) {
                     String string = entry.getKey();
-              //      System.out.println(string);
+            
                     ArrayList<String> arrayList = entry.getValue();
                     for(int i=0;i<arrayList.size();i++)
                     {
-                //        System.out.print(arrayList.get(i));
+                        
                     }
                     
                 }
@@ -508,13 +423,11 @@ public class inference
                 }
                 else
                     forLoopDetection.add(rule);
-                //System.out.println("Hah" + rule);
+                
                 String splittedRule[] = rule.split("=>");
                 
-                //You get the entire LHS here
                 String premiseString = splittedRule[0].trim();
-                //Now split lhs with ^ and now every term now is called recursively
-                //before that trim all terms
+                
                 String allIndividualPremises[] = premiseString.split("\\^");
 
                 int numberOfTruths = 0;
@@ -522,7 +435,7 @@ public class inference
                 {
                     allIndividualPremises[i] = allIndividualPremises[i].trim();
 
-                    //System.out.println("Bhosdina "+allIndividualPremises[i]);
+                
                     boolean truthValueOfCurrentPremise = FOL_BC_WITH_UNIFY(KB, allIndividualPremises[i],rule);
 
                     if(truthValueOfCurrentPremise)
@@ -533,8 +446,7 @@ public class inference
                 }
                 if(numberOfTruths==allIndividualPremises.length)
                 {
-                    //Ek bhi rule ka sab true aya to khatam return true karna hai and baki ke rules me dhundne ka jaroori nahi
-                    //so you can break here
+                    
                     globalTrueOrWala = true;
                     break;
 
@@ -544,20 +456,19 @@ public class inference
 
             }
             
-            //This hashmap has all possible values of variables in the above rule
-            //System.out.println("Permu is:");
+            
             for (Map.Entry<String, ArrayList<String>> entry : permu.entrySet()) {
                 String string = entry.getKey();
-                //System.out.print(string+"=>");
+                
                 ArrayList<String> arrayList = entry.getValue();
                 for(int yo=0;yo<arrayList.size();yo++)
                 {
-                    //System.out.print(arrayList.get(yo)+" ");
+                    
                 }
-                //System.out.println("");
+                
 
             }
-            //String ruleTriedPermutation = 
+            
 
             ArrayList< ArrayList<String>> allStrings = new ArrayList<>();
 
@@ -570,9 +481,6 @@ public class inference
 
             ArrayList <String> curr2 = new ArrayList<>();
             nested(allStrings.size(), 0, allStrings, curr2);
-
-            //System.out.println("hahahaha Strings");
-            //System.out.println(global.size());
 
             ArrayList < LinkedHashMap<String, String>  > returnedHashMaps = new ArrayList<>();
 
@@ -588,10 +496,10 @@ public class inference
 
                 }
                 returnedHashMaps.add(oneHashMap);
-                //System.out.println();
+                
             }
 
-            //System.out.println("Finally");
+            
             for(int i=0;i<returnedHashMaps.size();i++)
             {   
                 LinkedHashMap<String, String> timepass = returnedHashMaps.get(i);
@@ -599,13 +507,11 @@ public class inference
                 for (Map.Entry<String, String> entry : timepass.entrySet()) {
                     String string = entry.getKey();
                     String string1 = entry.getValue();
-                    //System.out.print(string);
-                    //System.out.print(string1);
-
+                    
                 }
-                //System.out.println("");
+                
             }
-            //Now I have returnedHashMap which is array of substitutions
+            
             boolean ekOrEkBooleanForAllSubsitutedConstants = false;
 
             for(int hashMapsTimes=0;hashMapsTimes<returnedHashMaps.size();hashMapsTimes++)
@@ -617,15 +523,14 @@ public class inference
                 for (Map.Entry<String, String> entry : timepass.entrySet()) {
                     String string = entry.getKey();
                     String string1 = entry.getValue();
-                    //System.out.print(string);
-                    //System.out.print(string1);
+                    
                     tempRule = tempRule.replace(string, string1);
 
                 }
                 
                 if(forLoopDetection.contains(tempRule))
                 {
-                    //System.out.println("idhar");
+                    
                     return false;
                 }
                 else
@@ -647,7 +552,7 @@ public class inference
                 {
                     allIndividualPremises[i] = allIndividualPremises[i].trim();
 
-                    //System.out.println("Bhosdina "+allIndividualPremises[i]);
+                    
                     boolean truthValueOfCurrentPremise = FOL_BC_WITH_UNIFY(KB, allIndividualPremises[i],tempRule);
 
                     if(truthValueOfCurrentPremise)
@@ -658,8 +563,7 @@ public class inference
                 }
                 if(numberOfTruths==allIndividualPremises.length)
                 {
-                    //Ek bhi rule ka sab true aya to khatam return true karna hai and baki ke rules me dhundne ka jaroori nahi
-                    //so you can break here
+                    
                     globalTrueOrWala = true;
                     break;
 
@@ -679,17 +583,13 @@ public class inference
         return false;
 
 
-        //remove in the end this return 
-        //return false;
-
+       
 
     }
     private static LinkedHashMap<String, ArrayList<String>> tryPermutation(LinkedHashMap<String, Data> KB, String rule) {
-        //First of all split the rule
-        //System.out.println(rule);
-        //System.out.println(rule);
+        
         String splitRule[] = rule.split("=>");
-        //System.out.println(Arrays.toString(splitRule));
+        
         String wholePremise = splitRule[0];
         
         String eachPremise[] = wholePremise.split("\\^");
@@ -704,22 +604,11 @@ public class inference
             
             ArrayList <String> extractedArg = extractArguments(eachPremise[i]);
             
-            //System.out.println(argName);
+            
             
             
             Data foundDataFromKB = KB.get(argName);
-//            System.out.println("haha");
-//            for (Map.Entry<String, Data> entry : KB.entrySet()) {
-//                String string = entry.getKey();
-//                Data d = entry.getValue();
-//                System.out.println(string);
-//                
-//                
-//            }
-            
-//            if(foundDataFromKB==null)
-//                System.out.println("null");
-            
+
             ArrayList <String> facts = foundDataFromKB.facts;
             
             
@@ -742,7 +631,7 @@ public class inference
                 {
                     if(constants[j])
                     {
-                        //it is a constant
+                        
                         String constantFromRule = extractedArg.get(j);
 
                         String constantFromFact = argumentsFacts.get(j);
@@ -757,7 +646,7 @@ public class inference
 
                 if(counter1==counter2)
                 {
-                    //System.out.println("rule and fact match");
+                    
 
                     for(int j=0;j<constants.length;j++)
                     {
@@ -792,7 +681,6 @@ public class inference
         for (Map.Entry<String, LinkedHashSet<String>> entry : substi.entrySet()) {
 
             String string = entry.getKey();
-            //System.out.print(string+" ");
             
             ArrayList <String> list = new ArrayList<>();
             LinkedHashSet<String> set = entry.getValue();
@@ -800,10 +688,10 @@ public class inference
             while (iter.hasNext()) {
                 String temp = iter.next();
                 list.add(temp);
-                //System.out.println(iter.next());
+                    
             }
             listOfAllValuesOfVariables.put(string, list);
-            //System.out.println();
+                
         }
         return listOfAllValuesOfVariables;
         
@@ -822,11 +710,11 @@ public class inference
             int i;
             for( i=0;i<curr.size();i++)
             {
-                //System.out.print(curr.get(i)+" ");
+                
 
                 x.add(curr.get(i));
             }
-            //System.out.println("");
+            
             global.add(x);
             
         }
@@ -848,11 +736,10 @@ public class inference
     
     static void printKB(HashMap<String, Data> KB)
     {
-        //System.out.println("Idhar Haha");
-        //System.out.println("Printing KB");
+        
         for (Map.Entry<String, Data> entry : KB.entrySet()) {
             
-            //System.out.println("hahaha");
+            
             String string = entry.getKey();
             
             System.out.println(string);
